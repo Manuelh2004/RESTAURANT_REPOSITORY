@@ -17,9 +17,34 @@ public class ProvinceEntity {
     private int province_id;
     @Column
     private String pro_name;
+    
     @ManyToOne
     @JoinColumn(name = "dep_id")
-    private DepartamentEntity departament;
+    private DepartamentEntity departament;    
+
+    public ProvinceEntity(String pro_name, DepartamentEntity departament) {
+        this.pro_name = pro_name;
+        this.departament = departament;
+    }
+    public ProvinceEntity() {
+    }
     
-    
+    public int getProvince_id() {
+        return province_id;
+    }
+    public void setProvince_id(int province_id) {
+        this.province_id = province_id;
+    }
+    public String getPro_name() {
+        return pro_name;
+    }
+    public void setPro_name(String pro_name) {
+        this.pro_name = pro_name;
+    }
+    public DepartamentEntity getDepartament() {
+        return departament;
+    }
+    public void setDepartament(DepartamentEntity departament) {
+        this.departament = departament;
+    }       
 }
