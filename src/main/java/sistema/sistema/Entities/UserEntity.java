@@ -1,5 +1,12 @@
 package sistema.sistema.Entities;
 
+import java.util.Collection;
+import java.util.List;
+
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -8,10 +15,17 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
+import jakarta.persistence.UniqueConstraint;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
 
+@Data
+@Builder
+@AllArgsConstructor
 @Entity
-@Table(name = "user")
-public class UserEntity {
+@Table(name = "users", uniqueConstraints = {@UniqueConstraint(columnNames = {"usr_email"})}) //Para que los email sean únicos
+public class UserEntity implements UserDetails {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int usr_id; 
@@ -27,6 +41,10 @@ public class UserEntity {
     private String usr_document;
     @Column
     private String usr_status;
+    @Column(nullable = false) //Para que los ingresos de nuevos registros no sean permitidos sin el campo usr_email
+    private String usr_email;
+    @Column
+    private String usr_password;
     
     @ManyToOne
     @JoinColumn(name = "rol_id")
@@ -39,17 +57,19 @@ public class UserEntity {
     private TypeUserEntity type_user;    
     @ManyToOne
     @JoinColumn(name = "tpe_doc_id")
-    private TypeDocumentEntity type_document;
-    
+    private TypeDocumentEntity type_document;       
+   
     public UserEntity(String usr_name, String usr_last_name, String usr_birthdate, String usr_photo,
-            String usr_document, String usr_status, RoleEntity role, BranchEntity branch, TypeUserEntity type_user,
-            TypeDocumentEntity type_document) {
+            String usr_document, String usr_status, String usr_email, String usr_password, RoleEntity role,
+            BranchEntity branch, TypeUserEntity type_user, TypeDocumentEntity type_document) {
         this.usr_name = usr_name;
         this.usr_last_name = usr_last_name;
         this.usr_birthdate = usr_birthdate;
         this.usr_photo = usr_photo;
         this.usr_document = usr_document;
         this.usr_status = usr_status;
+        this.usr_email = usr_email;
+        this.usr_password = usr_password;
         this.role = role;
         this.branch = branch;
         this.type_user = type_user;
@@ -58,6 +78,18 @@ public class UserEntity {
     public UserEntity() {
     }
     
+    public String getUsr_email() {
+        return usr_email;
+    }
+    public void setUsr_email(String usr_email) {
+        this.usr_email = usr_email;
+    }
+    public String getUsr_password() {
+        return usr_password;
+    }
+    public void setUsr_password(String usr_password) {
+        this.usr_password = usr_password;
+    }
     public int getUsr_id() {
         return usr_id;
     }
@@ -123,5 +155,50 @@ public class UserEntity {
     }
     public void setType_document(TypeDocumentEntity type_document) {
         this.type_document = type_document;
+    }
+
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() { //Representa la autoridad del usuario autenticado
+       return List.of(new SimpleGrantedAuthority(role.getRol_name())); 
+    }
+    @Override
+    public String getPassword() {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'getPassword'");
+    }
+    @Override
+    public String getUsername() {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'getUsername'");
     }        
+    /*
+    
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities(){
+        throw new UnsupportedOperationException("dasd"); 
+    }
+    @Override
+    public boolean isAccountNonLocked(){
+        return true; 
+    }
+    @Override
+    public boolean isCredentialsNonExpired(){
+         return true; 
+    }
+    @Override
+    public boolean isEnabled(){
+        return true; 
+    }
+
+    @Override
+    public String getUsername() {
+        return this.usr_email; // Usamos el email como nombre de usuario
+    }
+    
+    @Override
+    public String getPassword() {
+        return this.usr_password; // Devuelve la contraseña
+    }
+   */
+
 }

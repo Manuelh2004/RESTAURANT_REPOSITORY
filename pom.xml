@@ -79,6 +79,12 @@
 			<version>0.11.5</version>
 			<scope>runtime</scope>
 		</dependency>
+		<dependency>
+			<groupId>org.projectlombok</groupId>
+			<artifactId>lombok</artifactId>
+			<version>1.18.30</version> <!-- Verifica la última versión en https://mvnrepository.com/artifact/org.projectlombok/lombok -->
+			<scope>provided</scope>
+		</dependency>
 
 	</dependencies>
 
