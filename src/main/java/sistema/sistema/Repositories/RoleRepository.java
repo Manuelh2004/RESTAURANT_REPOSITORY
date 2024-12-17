@@ -7,10 +7,10 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
-import sistema.sistema.Entities.UserEntity;
+import sistema.sistema.Entities.RoleEntity;
 
 @Repository
-public interface UserRepository extends JpaRepository<UserEntity, Integer>{
-    @Query("SELECT u FROM UserEntity u WHERE u.usr_email = :usr_email")
-    Optional<UserEntity> findByUsrEmail(@Param("usr_email") String usr_email);
+public interface RoleRepository extends JpaRepository<RoleEntity, Integer>{
+    @Query("SELECT u FROM RoleEntity u WHERE u.rol_name = :rol_name")
+    Optional<RoleEntity> findByRolName(@Param("rol_name") String rol_name);
 }
