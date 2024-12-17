@@ -50,8 +50,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter{ //La extensi√
                 authToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
                 SecurityContextHolder.getContext().setAuthentication(authToken);
             }
-        }
-        
+        }        
         filterChain.doFilter(request, response); //Llamamos al filtro para que siga el curso
     }
 
@@ -64,13 +63,5 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter{ //La extensi√
         return authHeader.substring(7); //Retornamos el token
        }
        return null;
-    }
-
-     // M√©todo para ignorar rutas de autenticaci√≥n
-    @Override
-    protected boolean shouldNotFilter(HttpServletRequest request) {
-        String path = request.getRequestURI();
-        return path.startsWith("/auth/");
-    }
-
+    }  
 }
