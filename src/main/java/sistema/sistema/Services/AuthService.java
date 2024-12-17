@@ -1,8 +1,10 @@
 package sistema.sistema.Services;
 
+import org.aspectj.apache.bcel.generic.RET;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -32,25 +34,12 @@ public class AuthService {
 
 
    public AuthResponse login(LoginRequest request) {
-        // Autenticar al usuario
-        authenticationManager.authenticate(
-            new UsernamePasswordAuthenticationToken(
-                request.getUsr_email(),
-                request.getUsr_password()
-            )
-        );
-
-        // Obtener el usuario autenticado de la base de datos
-        UserEntity user = userRepository.findByUsrEmail(request.getUsr_email())
-            .orElseThrow(() -> new RuntimeException("User not found"));
-
-        // Generar el token
-        String token = jwtService.getToken(user);
-
-        // Devolver la respuesta
+        authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(request.getUsr_email(), request.getUsr_password()));
+        UserDetails user = userRepository.findByUsrEmail(request.getUsr_email()).orElseThrow(); 
+        String token=jwtService.getToken(user); 
         return AuthResponse.builder()
             .token(token)
-            .build();
+            .build(); 
     }
 
     public AuthResponse register(RegisterRequest request) {

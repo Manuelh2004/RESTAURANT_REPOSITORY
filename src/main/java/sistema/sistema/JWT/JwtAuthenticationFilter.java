@@ -3,6 +3,11 @@ package sistema.sistema.JWT;
 import java.io.IOException;
 
 import org.springframework.http.HttpHeaders;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 import org.springframework.web.filter.OncePerRequestFilter;
@@ -12,28 +17,39 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
+import sistema.sistema.Services.JWTService;
 
 //Configuración del JWT 
 @Component
 @RequiredArgsConstructor
 public class JwtAuthenticationFilter extends OncePerRequestFilter{ //La extensión es para configurar filtros personalizados
+
+    private final JWTService jwtService; 
+    private final UserDetailsService userDetailsService; 
     
     //Filtros relacionados al token
     @Override   //Se tiene acceso al request, response y filterChain (configurado previavemente)
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
     throws ServletException, IOException {
-
-        // Verificar si la ruta actual es una de autenticación
-        if (shouldNotFilter(request)) {
-            filterChain.doFilter(request, response); // Si es una ruta de autenticación, pasa al siguiente filtro
-            return;
-        }
        
         final String token = getTokenFromRequest(request); //Obtenemos el token del parametro request por medio de un metodo
+        final String username; 
 
         if (token == null){
             filterChain.doFilter(request, response); //Si es nulo, se retorna null
             return;
+        }
+        username = jwtService.getUsernameFromToken(token); 
+
+        if (username != null && SecurityContextHolder.getContext().getAuthentication() == null){
+            UserDetails userDetails = userDetailsService.loadUserByUsername(username); 
+
+            if(jwtService.isTokenValid(token, userDetails)){
+                UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities()); 
+                
+                authToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
+                SecurityContextHolder.getContext().setAuthentication(authToken);
+            }
         }
         
         filterChain.doFilter(request, response); //Llamamos al filtro para que siga el curso
