@@ -11,9 +11,11 @@ import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import lombok.RequiredArgsConstructor;
 
 //Configuración del JWT 
 @Component
+@RequiredArgsConstructor
 public class JwtAuthenticationFilter extends OncePerRequestFilter{ //La extensión es para configurar filtros personalizados
     
     //Filtros relacionados al token
@@ -21,12 +23,19 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter{ //La extensi�
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
     throws ServletException, IOException {
 
+        // Verificar si la ruta actual es una de autenticación
+        if (shouldNotFilter(request)) {
+            filterChain.doFilter(request, response); // Si es una ruta de autenticación, pasa al siguiente filtro
+            return;
+        }
+       
         final String token = getTokenFromRequest(request); //Obtenemos el token del parametro request por medio de un metodo
 
         if (token == null){
             filterChain.doFilter(request, response); //Si es nulo, se retorna null
             return;
         }
+        
         filterChain.doFilter(request, response); //Llamamos al filtro para que siga el curso
     }
 
@@ -40,4 +49,12 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter{ //La extensi�
        }
        return null;
     }
+
+     // Método para ignorar rutas de autenticación
+    @Override
+    protected boolean shouldNotFilter(HttpServletRequest request) {
+        String path = request.getRequestURI();
+        return path.startsWith("/auth/");
+    }
+
 }

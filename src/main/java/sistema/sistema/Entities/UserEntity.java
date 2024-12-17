@@ -89,14 +89,12 @@ public class UserEntity implements UserDetails {
 
     @Override
     public String getPassword() {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'getPassword'");
+        return this.usr_password; // Devuelve la contraseña
     }
 
     @Override
     public String getUsername() {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'getUsername'");
+        return this.usr_email; // Devuelve el email como nombre de usuario
     }  
         
       
