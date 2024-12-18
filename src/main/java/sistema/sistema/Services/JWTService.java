@@ -2,7 +2,9 @@ package sistema.sistema.Services;
 
 import java.util.Date;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 import java.util.function.Function;
 
 import org.springframework.security.core.userdetails.UserDetails;
@@ -20,6 +22,15 @@ import java.security.Key;
 public class JWTService {
 
     private static final String SECRET_KEY = "842ffdd30d2c48967c0c10dd1e81f832a3655adfe4eba60b4357b431e4fcbc5a";
+    private final Set<String> blacklistedTokens = new HashSet<>();
+
+    public void invalidateToken(String token) {
+        blacklistedTokens.add(token);
+    }
+
+    public boolean isTokenInvalid(String token) {
+        return blacklistedTokens.contains(token);
+    }
 
     public String getToken(UserDetails user) {
         return getToken(new HashMap<>(), user);
@@ -57,13 +68,16 @@ public class JWTService {
             .parseClaimsJws(token)
             .getBody(); 
     }
+
     public <T> T getClaim(String token, Function<Claims, T> claimsResolver){
         final Claims claims = getAllClaims(token);
         return claimsResolver.apply(claims);
     }
+
     public Date getExpiration (String token){
         return getClaim(token, Claims::getExpiration);
     }
+
     public boolean isTokenExpired(String token){
         return getExpiration(token).before(new Date()); 
     }
