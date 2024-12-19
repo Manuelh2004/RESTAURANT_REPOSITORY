@@ -72,8 +72,7 @@ public class AuthService {
             .usr_document(request.getUsr_document())
             .usr_status(request.getUsr_status())
             .usr_email(request.getUsr_email())
-            .usr_password(passwordEncoder.encode(request.getUsr_password())) // Codifica la contraseña
-            .role(userRole)
+            .usr_password(passwordEncoder.encode(request.getUsr_password())) // Codifica la contraseña            
             .branch(branch)
             .type_user(typeUser)
             .type_document(typeDocument)

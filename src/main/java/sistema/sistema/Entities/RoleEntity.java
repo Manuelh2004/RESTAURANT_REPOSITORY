@@ -1,5 +1,7 @@
 package sistema.sistema.Entities;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -13,7 +15,7 @@ public class RoleEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int rol_id;
-    @Column
+    @Column(nullable = false)
     private String rol_name;
     
     public RoleEntity(String rol_name) {
@@ -28,10 +30,13 @@ public class RoleEntity {
     public void setRol_id(int rol_id) {
         this.rol_id = rol_id;
     }
+    // Getters y Setters
     public String getRol_name() {
-        return rol_name;
+        return rol_name != null ? rol_name : "No role assigned";
     }
+    
+
     public void setRol_name(String rol_name) {
         this.rol_name = rol_name;
-    }    
+    }
 }
