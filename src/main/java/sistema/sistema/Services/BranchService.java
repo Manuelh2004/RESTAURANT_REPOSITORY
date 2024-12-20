@@ -22,6 +22,8 @@ public class BranchService {
     ProvinceRepository provinceRepository;
     @Autowired
     DistrictRespository districtRespository;    
+
+    //Branch ********************************************
    
     public List<BranchEntity> getAllBranches() {
         return branchRepository.findAll();

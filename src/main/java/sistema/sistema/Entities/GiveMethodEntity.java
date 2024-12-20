@@ -1,5 +1,5 @@
 package sistema.sistema.Entities;
 
-public class AttendanceHistory {
+public class GiveMethodEntity {
     
 }

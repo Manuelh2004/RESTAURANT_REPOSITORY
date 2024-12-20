@@ -5,11 +5,13 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 
 @Entity
 @Table(name = "notification")
-public class Notification {
+public class NotificationEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY) 
     private int not_id; 
@@ -18,13 +20,18 @@ public class Notification {
     @Column
     private String status;
     
-    public Notification(String not_message, String status) {
+    @ManyToOne
+    @JoinColumn(name = "usr_id")
+    private UserEntity users;        
+
+    public NotificationEntity(String not_message, String status, UserEntity users) {
         this.not_message = not_message;
         this.status = status;
+        this.users = users;
     }
-    public Notification() {
+    public NotificationEntity() {
     }
-    
+
     public int getNot_id() {
         return not_id;
     }
@@ -42,5 +49,11 @@ public class Notification {
     }
     public void setStatus(String status) {
         this.status = status;
+    }
+    public UserEntity getUsers() {
+        return users;
+    }
+    public void setUsers(UserEntity users) {
+        this.users = users;
     }    
 }
