@@ -49,7 +49,7 @@ public class UserEntity implements UserDetails {
     @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @JoinColumn(name = "user_id") // Enlace con la tabla `roles`
     private Set<RoleEntity> authorities = new HashSet<>(); 
-
+    
     @ManyToOne
     @JoinColumn(name = "brh_id")
     private BranchEntity branch;    

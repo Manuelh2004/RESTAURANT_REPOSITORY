@@ -43,14 +43,32 @@ public class AuthService {
     @Autowired
     private final PasswordEncoder passwordEncoder; 
 
-   public AuthResponse login(LoginRequest request) {
-        authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(request.getUsr_email(), request.getUsr_password()));
-        UserDetails user = userRepository.findByUsrEmail(request.getUsr_email()).orElseThrow(); 
-        String token=jwtService.getToken(user); 
+    public AuthResponse login(LoginRequest request) {
+        // Autentica al usuario
+        authenticationManager.authenticate(
+            new UsernamePasswordAuthenticationToken(request.getUsr_email(), request.getUsr_password())
+        );
+    
+        // Busca al usuario en la base de datos
+        UserEntity user = userRepository.findByUsrEmail(request.getUsr_email())
+            .orElseThrow(() -> new RuntimeException("User not found"));
+    
+        // Genera el token
+        String token = jwtService.getToken(user);
+    
+        // Retorna el token y los datos del usuario
         return AuthResponse.builder()
             .token(token)
-            .build(); 
+            .usr_id(user.getUsr_id())
+            .usr_last_name(user.getUsr_last_name())
+            .usr_status(user.getUsr_status())
+            .usr_photo(user.getUsr_photo())
+            .usr_name(user.getUsr_name())
+            .usr_document(user.getUsr_document())
+            .branch(user.getBranch()) // Asegúrate de que `getBranch()` retorna un `BranchEntity`
+            .build();
     }
+    
 
     public AuthResponse register(RegisterRequest request) {       
            // Buscar las entidades relacionadas usando los IDs de la solicitud
