@@ -8,7 +8,6 @@ import org.springframework.stereotype.Service;
 import sistema.sistema.Entities.AttendanceEntity;
 import sistema.sistema.Entities.AttendanceHistoryEntity;
 import sistema.sistema.Entities.AttendanceRecordEntity;
-import sistema.sistema.Entities.BranchEntity;
 import sistema.sistema.Repositories.AttendanceHistoryRepository;
 import sistema.sistema.Repositories.AttendanceRecordRepository;
 import sistema.sistema.Repositories.AttendanceRepository;

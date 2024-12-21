@@ -3,9 +3,9 @@ package sistema.sistema.Repositories;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
-import sistema.sistema.Entities.NotificationEntity;
+import sistema.sistema.Entities.OrderEntity;
 
 @Repository
-public interface NotificationRepository extends JpaRepository<NotificationEntity, Integer> {
+public interface OrderRepository extends JpaRepository<OrderEntity, Integer>{
     
 }

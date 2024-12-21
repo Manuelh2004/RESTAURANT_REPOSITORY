@@ -9,7 +9,7 @@ import jakarta.persistence.Table;
 
 @Entity
 @Table(name = "shipping_method")
-public class ShippingMethod {
+public class ShippingMethodEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int shod_id; 
@@ -20,12 +20,12 @@ public class ShippingMethod {
     @Column
     private double shod_discount;    
 
-    public ShippingMethod(String shod_name, String shod_abbreviation, double shod_discount) {
+    public ShippingMethodEntity(String shod_name, String shod_abbreviation, double shod_discount) {
         this.shod_name = shod_name;
         this.shod_abbreviation = shod_abbreviation;
         this.shod_discount = shod_discount;
     }
-    public ShippingMethod() {
+    public ShippingMethodEntity() {
     }
     
     public int getShod_id() {
