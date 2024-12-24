@@ -1,5 +1,7 @@
 package sistema.sistema.Entities;
 
+import java.time.LocalDate;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -30,7 +32,7 @@ public class ScheduleEntity {
     @Column 
     private String shde_sunday;
     @Column 
-    private String shde_start_date;
+    private LocalDate shde_start_date;
     @Column 
     private String shde_status;
     @Column 
@@ -39,9 +41,9 @@ public class ScheduleEntity {
     @ManyToOne
     @JoinColumn(name = "usr_id")     
     private UserEntity usuario;    
-    
+
     public ScheduleEntity(String shde_monday, String shde_tuesday, String shde_wednesday, String shde_thursday,
-            String shde_friday, String shde_saturday, String shde_sunday, String shde_start_date, String shde_status,
+            String shde_friday, String shde_saturday, String shde_sunday, LocalDate shde_start_date, String shde_status,
             double shde_number_hours, UserEntity usuario) {
         this.shde_monday = shde_monday;
         this.shde_tuesday = shde_tuesday;
@@ -106,10 +108,10 @@ public class ScheduleEntity {
     public void setShde_sunday(String shde_sunday) {
         this.shde_sunday = shde_sunday;
     }
-    public String getShde_start_date() {
+    public LocalDate getShde_start_date() {
         return shde_start_date;
     }
-    public void setShde_start_date(String shde_start_date) {
+    public void setShde_start_date(LocalDate shde_start_date) {
         this.shde_start_date = shde_start_date;
     }
     public String getShde_status() {

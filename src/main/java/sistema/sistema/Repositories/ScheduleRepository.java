@@ -12,7 +12,9 @@ import sistema.sistema.Entities.UserEntity;
 
 @Repository
 public interface ScheduleRepository extends JpaRepository<ScheduleEntity, Integer>{
-    //@Query("SELECT s FROM ScheduleEntity s HERE s.usr_id = :usr_id")
-    //Optional<ScheduleEntity> findByUsuario(@Param("usr_id") Integer usr_id);
+    
     Optional<ScheduleEntity> findByUsuario(UserEntity usuario);
+
+    @Query("SELECT s FROM ScheduleEntity s WHERE s.usuario = :user AND s.shde_status = 'Active'")
+    Optional<ScheduleEntity> findActiveScheduleByUser(@Param("user") UserEntity user);
 }

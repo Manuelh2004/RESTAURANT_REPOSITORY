@@ -1,5 +1,6 @@
 package sistema.sistema.Services;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
@@ -40,7 +41,11 @@ public class ScheduleService {
            throw new IllegalStateException("SCHEDULE_ALREADY_EXISTS");
        }
 
+        LocalDate currentDate = LocalDate.now();
+
        schedule.setUsuario(user);
+       schedule.setShde_status("Active");
+       schedule.setShde_start_date(currentDate);
        return scheduleRepository.save(schedule);
     }
 
@@ -52,10 +57,7 @@ public class ScheduleService {
             schedule.setShde_thursday(scheduleDetails.getShde_thursday());
             schedule.setShde_friday(scheduleDetails.getShde_friday());
             schedule.setShde_saturday(scheduleDetails.getShde_saturday());
-            schedule.setShde_sunday(scheduleDetails.getShde_sunday());
-            schedule.setShde_start_date(scheduleDetails.getShde_start_date());
-            schedule.setShde_status(scheduleDetails.getShde_status());
-            schedule.setShde_number_hours(scheduleDetails.getShde_number_hours());           
+            schedule.setShde_sunday(scheduleDetails.getShde_sunday());          
             return scheduleRepository.save(schedule);
         }).orElseThrow(() -> new RuntimeException("Schedule not found with id " + id));
     }    
