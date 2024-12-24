@@ -6,9 +6,9 @@ import java.time.format.DateTimeFormatter;
 import java.time.format.TextStyle;
 import java.util.List;
 import java.util.Locale;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
 import sistema.sistema.Entities.AttendanceEntity;
@@ -40,22 +40,33 @@ public class AttendanceService {
         // Obtener el usuario logueado
         UserEntity user = authService.getLoggedInUserEntity();
         if (user == null) {
-            throw new RuntimeException("No se pudo obtener el usuario logueado.");    
-        }     
+            throw new RuntimeException("No se pudo obtener el usuario logueado.");
+        }
+
+        // Obtener la fecha actual
+        LocalDate currentDate = LocalDate.now();
+
+        // Verificar si ya existe un registro para el usuario en el día actual
+        Optional<AttendanceRecordEntity> existingAttendance = attendanceRecordRepository.findByAtreDateAndUser(currentDate, user);
+        if (existingAttendance.isPresent()) {
+            throw new RuntimeException("Ya has registrado tu asistencia para el día de hoy.");
+        }
 
         // Obtener el día de la semana actual
-        LocalDate currentDate = LocalDate.now();
         String dayOfWeek = currentDate.getDayOfWeek()
-                                      .getDisplayName(TextStyle.FULL, Locale.getDefault()); // Ejemplo: "Monday" o "Lunes"
+                                    .getDisplayName(TextStyle.FULL, Locale.getDefault()); // Ejemplo: "Monday" o "Lunes"
 
         // Obtener la hora actual
         LocalTime currentTime = LocalTime.now();
         String formattedTime = currentTime.format(DateTimeFormatter.ofPattern("HH:mm:ss")); // Formato: "HH:mm:ss"
 
-        // Asignar el día de la semana al campo atre_schedule
+        // Asignar los valores a attendance_record
         attendance_record.setAtre_schedule(dayOfWeek);
         attendance_record.setAtre_hour_entry(formattedTime);
+        attendance_record.setAtre_date(currentDate); // Guardar la fecha actual
         attendance_record.setUsers(user);
+
+        // Guardar el nuevo registro de asistencia
         return attendanceRecordRepository.save(attendance_record);
     }
     

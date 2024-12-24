@@ -37,12 +37,26 @@ public class AttendanceRecordController {
 
     @PostMapping
     public ResponseEntity<ApiResponse<AttendanceRecordEntity>> createAttendanceRecord(@RequestBody AttendanceRecordEntity attendance_record) {
-        AttendanceRecordEntity attendance_record_value = attendanceService.createAttendanceRecord(attendance_record);
-        return ApiResponseBuilder.buildResponse(
-                HttpStatus.CREATED,
-                "Attendance record creada correctamente",
-                attendance_record_value
-        );
+        try {
+            AttendanceRecordEntity savedAttendanceRecord = attendanceService.createAttendanceRecord(attendance_record);
+            return ApiResponseBuilder.buildResponse(
+                    HttpStatus.CREATED,
+                    "Registro de asistencia creado correctamente",
+                    savedAttendanceRecord
+            );
+        } catch (RuntimeException e) {
+            return ApiResponseBuilder.buildResponse(
+                    HttpStatus.BAD_REQUEST,
+                    e.getMessage(),
+                    null
+            );
+        } catch (Exception e) {
+            return ApiResponseBuilder.buildResponse(
+                    HttpStatus.INTERNAL_SERVER_ERROR,
+                    "Error interno al crear el registro de asistencia",
+                    null
+            );
+        }    
     }
 
 

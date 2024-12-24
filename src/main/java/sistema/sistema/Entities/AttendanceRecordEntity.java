@@ -1,5 +1,7 @@
 package sistema.sistema.Entities;
 
+import java.time.LocalDate;
+
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import jakarta.persistence.Column;
@@ -23,6 +25,8 @@ public class AttendanceRecordEntity {
     private String atre_schedule; 
     @Column
     private String atre_hour_entry; 
+    @Column
+    private LocalDate atre_date;
 
     @ManyToOne
     @JoinColumn(name = "attend_id")
@@ -32,11 +36,13 @@ public class AttendanceRecordEntity {
     @JoinColumn(name = "usr_id")
     private UserEntity users;    
 
+   
     public AttendanceRecordEntity(double atre_hours_done, String atre_schedule, String atre_hour_entry,
-            AttendanceEntity attendance, UserEntity users) {
+            LocalDate atre_date, AttendanceEntity attendance, UserEntity users) {
         this.atre_hours_done = atre_hours_done;
         this.atre_schedule = atre_schedule;
         this.atre_hour_entry = atre_hour_entry;
+        this.atre_date = atre_date;
         this.attendance = attendance;
         this.users = users;
     }
@@ -78,5 +84,11 @@ public class AttendanceRecordEntity {
     }
     public void setUsers(UserEntity users) {
         this.users = users;
+    }
+    public LocalDate getAtre_date() {
+        return atre_date;
+    }
+    public void setAtre_date(LocalDate atre_date) {
+        this.atre_date = atre_date;
     }         
 }
