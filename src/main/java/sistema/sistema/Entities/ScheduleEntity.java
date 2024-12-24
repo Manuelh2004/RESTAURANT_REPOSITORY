@@ -38,9 +38,8 @@ public class ScheduleEntity {
 
     @ManyToOne
     @JoinColumn(name = "usr_id")     
-    //@JsonIgnore 
     private UserEntity usuario;    
-
+    
     public ScheduleEntity(String shde_monday, String shde_tuesday, String shde_wednesday, String shde_thursday,
             String shde_friday, String shde_saturday, String shde_sunday, String shde_start_date, String shde_status,
             double shde_number_hours, UserEntity usuario) {

@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import sistema.sistema.Entities.ScheduleEntity;
+import sistema.sistema.Entities.UserEntity;
 import sistema.sistema.Repositories.ScheduleRepository;
 import sistema.sistema.Repositories.UserRepository;
 
@@ -16,6 +17,8 @@ public class ScheduleService {
     UserRepository userRepository;
     @Autowired
     ScheduleRepository scheduleRepository; 
+    @Autowired
+    AuthService authService; 
 
     public List<ScheduleEntity> getAllSchedules() {
         return scheduleRepository.findAll();
@@ -26,7 +29,19 @@ public class ScheduleService {
     }
 
     public ScheduleEntity createSchedule(ScheduleEntity schedule) {
-        return scheduleRepository.save(schedule);
+       // Obtener el usuario logueado
+       UserEntity user = authService.getLoggedInUserEntity();
+       if (user == null) {
+           throw new IllegalStateException("USER_NOT_FOUND");
+       }
+       // Verificar si el usuario ya tiene un horario
+       Optional<ScheduleEntity> existingSchedule = scheduleRepository.findByUsuario(user);
+       if (existingSchedule.isPresent()) {
+           throw new IllegalStateException("SCHEDULE_ALREADY_EXISTS");
+       }
+
+       schedule.setUsuario(user);
+       return scheduleRepository.save(schedule);
     }
 
     public ScheduleEntity updateSchedule(int id, ScheduleEntity scheduleDetails) {

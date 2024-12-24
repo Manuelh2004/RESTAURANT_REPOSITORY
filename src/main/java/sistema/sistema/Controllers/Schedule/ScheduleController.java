@@ -53,8 +53,38 @@ public class ScheduleController {
     }
 
     @PostMapping
-    public ScheduleEntity registrar(@RequestBody ScheduleEntity Sucursal){
-        return scheduleService.createSchedule(Sucursal); 
+    public ResponseEntity<ApiResponse<ScheduleEntity>> createSchedule(@RequestBody ScheduleEntity schedule) {
+        try {
+            ScheduleEntity createdSchedule = scheduleService.createSchedule(schedule);
+            return ApiResponseBuilder.buildResponse(
+                    HttpStatus.CREATED,
+                    "Horario registrado exitosamente",
+                    createdSchedule
+            );
+        } catch (IllegalStateException e) {
+            String errorMessage;
+            HttpStatus status;
+
+            switch (e.getMessage()) {
+                case "USER_NOT_FOUND":
+                    errorMessage = "No se pudo obtener el usuario logueado.";
+                    status = HttpStatus.UNAUTHORIZED;
+                    break;
+                case "SCHEDULE_ALREADY_EXISTS":
+                    errorMessage = "El usuario ya tiene un horario registrado.";
+                    status = HttpStatus.CONFLICT;
+                    break;
+                default:
+                    errorMessage = "Ocurrió un error desconocido.";
+                    status = HttpStatus.INTERNAL_SERVER_ERROR;
+            }
+
+            return ApiResponseBuilder.buildResponse(
+                    status,
+                    errorMessage,
+                    null
+            );
+        }       
     }
 
 

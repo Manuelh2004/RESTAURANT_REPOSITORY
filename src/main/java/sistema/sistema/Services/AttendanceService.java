@@ -41,7 +41,7 @@ public class AttendanceService {
         UserEntity user = authService.getLoggedInUserEntity();
         if (user == null) {
             throw new RuntimeException("No se pudo obtener el usuario logueado.");    
-        }
+        }     
 
         // Obtener el día de la semana actual
         LocalDate currentDate = LocalDate.now();
